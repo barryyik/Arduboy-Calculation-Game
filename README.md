@@ -3,7 +3,7 @@
 ## Introduction
 "HYY Maths Game" is a game created for the Arduboy, which is a tiny handheld game console created based on arduinos.
 
-For more details, visit [arduboy.com](arduboy.com).
+For more details, visit [arduboy.com](https://arduboy.com).
 
 ## Versions' History
 I start this project on 26th February 2019. The very first "version" of the game is just a timer (version v01). You can see how I progress in making this little game from versions to versions (v01 to v39, the first playable version).
