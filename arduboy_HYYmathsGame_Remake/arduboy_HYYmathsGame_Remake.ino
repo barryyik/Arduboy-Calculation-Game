@@ -184,7 +184,7 @@ void actionWhenCorrectButtonPressed() {
 void actionWhenWrongButtonPressed() {
     timePenaltyInMillis = 2000 + (level - 1) * 100;
     referenceTimeInMillis -= timePenaltyInMillis;
-    if (referenceTimeInMillis <= currentTimeInMillis - 10000) referenceTimeInMillis = currentTimeInMillis - 10000;
+    if (referenceTimeInMillis <= currentTimeInMillis - maxTimeDifferenceInMillis) referenceTimeInMillis = currentTimeInMillis - maxTimeDifferenceInMillis;
 }
 
 void freezeScreen() {
