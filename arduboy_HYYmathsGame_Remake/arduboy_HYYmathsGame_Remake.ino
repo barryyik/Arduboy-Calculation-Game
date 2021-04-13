@@ -10,27 +10,21 @@
 #include <Arduboy2.h>
 #include <timer.h>
 
-#define EEPROM_HIGHESTSCORE   EEPROM_STORAGE_SPACE_START
-#define EEPROM_HASRECORD   EEPROM_STORAGE_SPACE_START + 4
+#define EEPROM_HASRECORD   EEPROM_STORAGE_SPACE_START
+#define EEPROM_HIGHESTSCORE   EEPROM_STORAGE_SPACE_START + 4
 
 Arduboy2 arduboy;
 
 // variables for game play
 bool needInitializeGame;
-bool isScreenFreezed;
 bool needGenerateNewQuestion;
-bool needCheckDuplicatedChoices;
 float HighestScoreHYY;
 
 // variables for time
 unsigned long referenceTimeInMillis;
 unsigned long currentTimeInMillis;
-unsigned long timePassedInMillis;
 unsigned long maxTimeDifferenceInMillis; // Constant, value = 10000
-
 float timeLeft;
-unsigned long timeRewardInMillis;
-unsigned long timePenaltyInMillis;
 
 // variables for level & score
 float score;
@@ -39,16 +33,10 @@ int level;
 // variables for setting questions
 int questionNumber;
 int answerPosition;
-
 int dummyVariable1;
 int dummyVariable2;
 int dummyVariable3;
-
 int randomNumber;
-int firstNumber;
-int secondNumber;
-int thirdNumber;
-String operatorString;
 String questionString;
 
 // variables for answer options
@@ -76,7 +64,7 @@ void loop() {
     /* Create game interface */
     // UI - Time
     currentTimeInMillis = millis();
-    timePassedInMillis = currentTimeInMillis - referenceTimeInMillis;
+    unsigned long timePassedInMillis = currentTimeInMillis - referenceTimeInMillis;
     float timePassedIn10Millis = timePassedInMillis / 10;
     timeLeft = 10.00 - ((timePassedIn10Millis > 1000) ? 1000 : timePassedIn10Millis) /100;
     String timeLeftString = String(timeLeft);
@@ -167,7 +155,7 @@ void loop() {
 /* Other Functions Goes Here */
 
 void actionWhenCorrectButtonPressed() {
-    timeRewardInMillis = 4000 - (level - 1) * 250;
+    unsigned long timeRewardInMillis = 4000 - (level - 1) * 250;
     referenceTimeInMillis += timeRewardInMillis;
     if (referenceTimeInMillis > currentTimeInMillis) referenceTimeInMillis = currentTimeInMillis;
 
@@ -182,13 +170,13 @@ void actionWhenCorrectButtonPressed() {
 }
 
 void actionWhenWrongButtonPressed() {
-    timePenaltyInMillis = 2000 + (level - 1) * 100;
+    unsigned long timePenaltyInMillis = 2000 + (level - 1) * 100;
     referenceTimeInMillis -= timePenaltyInMillis;
     if (referenceTimeInMillis <= currentTimeInMillis - maxTimeDifferenceInMillis) referenceTimeInMillis = currentTimeInMillis - maxTimeDifferenceInMillis;
 }
 
 void freezeScreen() {
-    isScreenFreezed = true;
+    bool isScreenFreezed = true;
     while (isScreenFreezed == true) {
         arduboy.pollButtons();
         if ( arduboy.justPressed(UP_BUTTON)
@@ -213,14 +201,10 @@ void initializeGame() {
     // Get Highest Score (and set to 0.00 if there isn't any)
     float hasSetHighestScore = EEPROM.get(EEPROM_HASRECORD, hasSetHighestScore);
     if (hasSetHighestScore != 20210412.1958) {
-        float tempFloat = 20210412.1958;
-        EEPROM.put(EEPROM_HASRECORD, tempFloat);
-        HighestScoreHYY = 0.00;
-        EEPROM.put(EEPROM_HIGHESTSCORE, HighestScoreHYY);
+        EEPROM.put(EEPROM_HASRECORD, 20210412.1958);
+        EEPROM.put(EEPROM_HIGHESTSCORE, 0.00);
     }
-    else {
-        HighestScoreHYY = EEPROM.get(EEPROM_HIGHESTSCORE, HighestScoreHYY);
-    }
+    HighestScoreHYY = EEPROM.get(EEPROM_HIGHESTSCORE, HighestScoreHYY);
 
     showGameStartScreen();
 
@@ -297,7 +281,11 @@ void generateNewDummyVariables(int operatorInt) {
 void generateNewQuestionAndAnswers() {
     needGenerateNewQuestion = false;
 
+    int firstNumber;
+    int secondNumber;
+    int thirdNumber;
     int answerPositionArray[] = {0,1,2,3};
+
     // shuffle the array
     for (int i = 0; i < 4; i++) {
         generateRandomNumber(4);
@@ -310,7 +298,7 @@ void generateNewQuestionAndAnswers() {
 
     String allOperators = "+-*/";
     generateRandomNumber(4);
-    operatorString = allOperators[randomNumber];
+    String operatorString = String(allOperators[randomNumber]);
     int operatorInt = allOperators.indexOf(operatorString);
 
     // Generate variables
@@ -333,7 +321,7 @@ void generateNewQuestionAndAnswers() {
     int otherChoice1;
     int otherChoice2;
     int otherChoice3;
-    needCheckDuplicatedChoices = true;
+    bool needCheckDuplicatedChoices = true;
     while (needCheckDuplicatedChoices) {
         if (operatorInt % 2 == 0) {
             generateNewDummyVariables(operatorInt);
