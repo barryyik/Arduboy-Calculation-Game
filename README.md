@@ -8,7 +8,7 @@ The **arduboy_HYYmathsGame** is the very first playable game release programmed 
 If you are interested, I strongly recommend you to download the **_Latest Version_** for a better game experience. The code is now more readable, logical and contains far less redundant code.
 
 ## Screenshots
-![Screenshots](https://github.com/barryyik/Arduboy-Calculation-Game/blob/master/screenshot.jpg?raw=true "可选标题")
+![Screenshots](https://github.com/barryyik/Arduboy-Calculation-Game/blob/master/screenshot.jpg?raw=true)
 
 
 ## Game Rules
